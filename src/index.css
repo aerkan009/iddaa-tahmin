@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    background-color: #0F172A;
+    color: #dae2fd;
+  }
+  body {
+    background-color: #0F172A;
+    color: #dae2fd;
+    min-height: max(884px, 100dvh);
+  }
+}
+
+@layer components {
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .neon-glow {
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.5);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 10px rgba(76, 215, 246, 0.8);
+  }
+
+  .text-glow-primary {
+    text-shadow: 0 0 10px rgba(75, 226, 119, 0.8), 0 0 20px rgba(75, 226, 119, 0.4);
+  }
+
+  .vip-unlocked-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid #4be277;
+    box-shadow: 0 0 24px rgba(74, 225, 118, 0.15), inset 0 0 12px rgba(74, 225, 118, 0.05);
+  }
+
+  .bg-cyber-grid {
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
+
+@layer utilities {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 20px);
+  }
+}
+
+/* Hide scrollbar for clean look */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
