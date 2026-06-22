@@ -7,7 +7,7 @@ dotenv.config({ path: '.env' });
 
 const currentYear = new Date().getFullYear();
 const currentMonth = new Date().getMonth();
-const SEASON = currentMonth >= 7 ? String(currentYear) : String(currentYear - 1);
+const SEASON = String(Math.min(currentMonth >= 7 ? currentYear : currentYear - 1, 2024));
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -225,6 +225,123 @@ async function syncFixtures() {
   console.log(`\n  Ozet: ${yeniSayisi} yeni, ${guncellemeSayisi} guncellendi.\n`);
 }
 
+async function syncLiveMatches() {
+  console.log("2. Canli maclar senkronize ediliyor...\n");
+
+  const url = `${API_BASE}/fixtures?live=all`;
+  let liveMaclari: ApiFixture[] = [];
+
+  try {
+    const res = await fetch(url, {
+      headers: {
+        'x-rapidapi-key': apiFootballKey || '',
+        'x-rapidapi-host': 'v3.football.api-sports.io',
+      },
+    });
+    const data = await res.json();
+    liveMaclari = data.response || [];
+  } catch {
+    console.warn("  Canli maclar alinamadi");
+    return;
+  }
+
+  if (liveMaclari.length === 0) {
+    console.log("  Su an canli mac yok.\n");
+
+    const { data: existingLive } = await supabase
+      .from('matches')
+      .select('id, teams')
+      .eq('status', 'live');
+
+    if (existingLive && existingLive.length > 0) {
+      for (const m of existingLive) {
+        await supabase.from('matches').update({ status: 'completed' }).eq('id', m.id);
+        console.log(`  Tamamlandi: ${m.teams}`);
+      }
+    }
+    return;
+  }
+
+  console.log(`  ${liveMaclari.length} canli mac bulundu.\n`);
+
+  const { data: existingData } = await supabase
+    .from('matches')
+    .select('id, home_team, away_team, teams, status, home_score, away_score');
+
+  const existing = (existingData || []) as Array<{
+    id: number; home_team?: string; away_team?: string;
+    teams: string; status: string; home_score?: number | null; away_score?: number | null;
+  }>;
+
+  const liveTeamKeys = new Set<string>();
+
+  for (const liveMac of liveMaclari) {
+    const apiHome = normalizeName(liveMac.teams.home.name);
+    const apiAway = normalizeName(liveMac.teams.away.name);
+    const key = `${apiHome}-${apiAway}`;
+    liveTeamKeys.add(key);
+
+    const teams = `${liveMac.teams.home.name} - ${liveMac.teams.away.name}`;
+    const homeScore = liveMac.goals.home;
+    const awayScore = liveMac.goals.away;
+    const matchTime = liveMac.fixture.status.short === 'HT'
+      ? 'HT'
+      : `${liveMac.fixture.status.elapsed || 0}'`;
+    const status = liveMac.fixture.status.short === 'FT' ? 'completed' : 'live';
+
+    const eslesen = existing.find((e) => {
+      const eHome = normalizeName(e.home_team || e.teams.split(' - ')[0] || '');
+      const eAway = normalizeName(e.away_team || e.teams.split(' - ')[1] || '');
+      return eHome === apiHome && eAway === apiAway;
+    });
+
+    if (eslesen) {
+      const updates: Record<string, unknown> = { status };
+      if (homeScore !== null) updates.home_score = homeScore;
+      if (awayScore !== null) updates.away_score = awayScore;
+      if (status === 'live') updates.match_time = matchTime;
+
+      await supabase.from('matches').update(updates).eq('id', eslesen.id);
+      console.log(`  Guncellendi: ${teams} (${homeScore ?? 0}-${awayScore ?? 0}, ${matchTime})`);
+    } else {
+      const { error } = await supabase.from('matches').insert({
+        match_time: matchTime,
+        teams: teams,
+        home_team: liveMac.teams.home.name,
+        away_team: liveMac.teams.away.name,
+        home_logo: liveMac.teams.home.logo,
+        away_logo: liveMac.teams.away.logo,
+        league: liveMac.league.name,
+        status,
+        home_score: homeScore,
+        away_score: awayScore,
+      });
+
+      if (!error) {
+        console.log(`  Yeni canli mac: ${teams} (${homeScore ?? 0}-${awayScore ?? 0})`);
+      }
+    }
+  }
+
+  const { data: storedLive } = await supabase
+    .from('matches')
+    .select('id, home_team, away_team, teams')
+    .eq('status', 'live');
+
+  if (storedLive) {
+    for (const m of storedLive) {
+      const nh = normalizeName(m.home_team || m.teams.split(' - ')[0] || '');
+      const na = normalizeName(m.away_team || m.teams.split(' - ')[1] || '');
+      if (!liveTeamKeys.has(`${nh}-${na}`)) {
+        await supabase.from('matches').update({ status: 'completed' }).eq('id', m.id);
+        console.log(`  Mac bitti: ${m.teams}`);
+      }
+    }
+  }
+
+  console.log();
+}
+
 async function main() {
   console.log("========================================");
   console.log("  FUTBOL TAHMIN ROBOTU v2");
@@ -233,6 +350,7 @@ async function main() {
   console.log("========================================\n");
 
   await syncFixtures();
+  await syncLiveMatches();
 
   console.log("========================================");
   console.log("  OPERASYON TAMAMLANDI");

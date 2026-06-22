@@ -3,7 +3,8 @@ const API_KEY = import.meta.env.VITE_API_FOOTBALL_KEY;
 
 function getCurrentSeason(): string {
   const now = new Date();
-  return now.getMonth() >= 7 ? String(now.getFullYear()) : String(now.getFullYear() - 1);
+  const year = now.getMonth() >= 7 ? now.getFullYear() : now.getFullYear() - 1;
+  return String(Math.min(year, 2024));
 }
 
 const POPULAR_LEAGUES = [

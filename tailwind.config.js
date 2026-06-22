@@ -90,7 +90,7 @@ export default {
       },
       animation: {
         scroll: 'scroll 20s linear infinite',
-        marquee: 'marquee 20s linear infinite',
+        marquee: 'marquee 40s linear infinite',
         'bg-pan': 'bg-pan 3s linear infinite',
         'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
