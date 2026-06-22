@@ -6,6 +6,10 @@ import { supabase } from '../lib/supabase';
 interface MatchResult {
   league: string;
   teams: string;
+  homeTeam: string;
+  awayTeam: string;
+  homeLogo?: string;
+  awayLogo?: string;
   homeScore: number;
   awayScore: number;
   prediction?: string;
@@ -59,6 +63,10 @@ export default function ResultsScreen() {
           return {
             league: f.league.name,
             teams: `${f.teams.home.name} - ${f.teams.away.name}`,
+            homeTeam: f.teams.home.name,
+            awayTeam: f.teams.away.name,
+            homeLogo: f.teams.home.logo,
+            awayLogo: f.teams.away.logo,
             homeScore,
             awayScore,
             prediction: pred?.free_prediction,
@@ -128,21 +136,27 @@ export default function ResultsScreen() {
         {results.map((r, i) => (
           <div key={i} className="glass-panel rounded-lg p-3 flex justify-between items-center relative overflow-hidden">
             <div className={`absolute left-0 top-0 bottom-0 w-1 ${r.won ? 'bg-primary' : 'bg-error'}`} />
-            <div className="flex flex-col pl-2 flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="font-data-label text-data-label text-on-surface-variant">{r.league}</span>
-                <span className="w-1 h-1 rounded-full bg-surface-variant" />
-                <span className="font-data-label text-data-label text-on-surface-variant truncate">{r.teams}</span>
+            <div className="flex items-center gap-2 pl-2 flex-1 min-w-0">
+              <div className="flex flex-col items-center shrink-0">
+                <img className="w-6 h-6 object-contain" src={r.homeLogo} alt="" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                <img className="w-6 h-6 object-contain" src={r.awayLogo} alt="" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
               </div>
-              <div className="flex items-center gap-2">
-                <span className="font-body-sm text-body-sm text-on-surface font-semibold">
-                  {r.homeScore} - {r.awayScore}
-                </span>
-                {r.prediction && (
-                  <span className="font-data-label text-data-label text-surface-variant ml-2">
-                    | {r.prediction}
+              <div className="flex flex-col min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-data-label text-data-label text-on-surface-variant">{r.league}</span>
+                  <span className="w-1 h-1 rounded-full bg-surface-variant" />
+                  <span className="font-data-label text-data-label text-on-surface-variant truncate">{r.teams}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-body-sm text-body-sm text-on-surface font-semibold">
+                    {r.homeScore} - {r.awayScore}
                   </span>
-                )}
+                  {r.prediction && (
+                    <span className="font-data-label text-data-label text-surface-variant ml-2">
+                      | {r.prediction}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-2 ml-2 shrink-0">

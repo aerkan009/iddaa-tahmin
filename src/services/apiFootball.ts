@@ -9,7 +9,16 @@ const POPULAR_LEAGUES = [
   { id: 61, name: 'FRA L1' },
   { id: 2, name: 'UCL' },
   { id: 3, name: 'UEL' },
+  { id: 211, name: 'Süper Lig' },
+  { id: 88, name: 'NED ERE' },
+  { id: 94, name: 'POR LIG' },
+  { id: 71, name: 'BRA SA' },
+  { id: 144, name: 'BEL PL' },
 ];
+
+export function getLeagueNames(): string[] {
+  return POPULAR_LEAGUES.map((l) => l.name);
+}
 
 export interface ApiFixture {
   fixture: {

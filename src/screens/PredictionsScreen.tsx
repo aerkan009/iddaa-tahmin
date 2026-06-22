@@ -9,6 +9,8 @@ interface Match {
   teams: string;
   home_team: string;
   away_team: string;
+  home_logo?: string;
+  away_logo?: string;
   league: string;
   status: string;
   free_prediction: string;
@@ -18,6 +20,18 @@ interface Match {
     korner: string;
   } | null;
   created_at: string;
+}
+
+function Logo({ src, name }: { src?: string; name: string }) {
+  const [error, setError] = useState(false);
+  if (!src || error) {
+    return (
+      <div className="w-12 h-12 rounded-full bg-surface-container-high border border-surface-variant flex items-center justify-center text-lg font-bold text-on-surface-variant">
+        {name?.[0] || '?'}
+      </div>
+    );
+  }
+  return <img className="w-12 h-12 object-contain" src={src} alt={name} onError={() => setError(true)} />;
 }
 
 function normalizeName(name: string): string {
@@ -92,7 +106,7 @@ export default function PredictionsScreen() {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 60000);
+    const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -148,9 +162,7 @@ export default function PredictionsScreen() {
             </div>
             <div className="flex justify-between items-center z-10 py-2 border-b border-white/5">
               <div className="flex flex-col items-center gap-2 w-1/3">
-                <div className="w-12 h-12 rounded-full bg-surface-container-high border border-surface-variant flex items-center justify-center p-2">
-                  <span className="font-title-md text-title-md text-on-surface">{match.home_team?.[0] || '?'}</span>
-                </div>
+                <Logo src={match.home_logo} name={match.home_team || match.teams.split(' - ')[0] || ''} />
                 <span className="font-title-md text-title-md text-on-surface text-center leading-tight">
                   {match.home_team || match.teams.split(' - ')[0]}
                 </span>
@@ -164,9 +176,7 @@ export default function PredictionsScreen() {
                 </span>
               </div>
               <div className="flex flex-col items-center gap-2 w-1/3">
-                <div className="w-12 h-12 rounded-full bg-surface-container-high border border-surface-variant flex items-center justify-center p-2">
-                  <span className="font-title-md text-title-md text-on-surface">{match.away_team?.[0] || '?'}</span>
-                </div>
+                <Logo src={match.away_logo} name={match.away_team || match.teams.split(' - ')[1] || ''} />
                 <span className="font-title-md text-title-md text-on-surface text-center leading-tight">
                   {match.away_team || match.teams.split(' - ')[1]}
                 </span>

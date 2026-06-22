@@ -36,12 +36,17 @@ const POPULAR_LEAGUES = [
   { id: 61, name: 'FRA L1' },
   { id: 2, name: 'UCL' },
   { id: 3, name: 'UEL' },
+  { id: 211, name: 'Süper Lig' },
+  { id: 88, name: 'NED ERE' },
+  { id: 94, name: 'POR LIG' },
+  { id: 71, name: 'BRA SA' },
+  { id: 144, name: 'BEL PL' },
 ];
 
 interface ApiFixture {
   fixture: { id: number; date: string; status: { short: string } };
   league: { id: number; name: string; country: string };
-  teams: { home: { name: string }; away: { name: string } };
+  teams: { home: { name: string; logo: string }; away: { name: string; logo: string } };
   goals: { home: number | null; away: number | null };
 }
 
@@ -189,6 +194,8 @@ async function syncFixtures() {
         teams: teams,
         home_team: apiMac.teams.home.name,
         away_team: apiMac.teams.away.name,
+        home_logo: apiMac.teams.home.logo,
+        away_logo: apiMac.teams.away.logo,
         league: apiMac.league.name,
         status: apiStatus,
         home_score: apiHomeScore,
