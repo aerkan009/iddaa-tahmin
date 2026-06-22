@@ -1,4 +1,4 @@
-name: Update Matches & Predictions
+name: Update Matches
 
 on:
   schedule:
