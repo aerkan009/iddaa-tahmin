@@ -180,33 +180,35 @@ export default function HomeScreen() {
                     </div>
                   </div>
 
-                  <div className="mb-5">
-                    <div className="bg-white/5 rounded-xl p-3 border border-white/5 flex justify-between items-center">
-                      <span className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Guvenilir Tahmin</span>
-                      <span className="font-bold text-white text-md">{match.free_prediction}</span>
-                    </div>
-                  </div>
+                  <div className="relative">
+                    <div className={`space-y-4 transition-all duration-700 ease-in-out ${!isUnlocked ? 'blur-lg opacity-30 select-none' : 'blur-0 opacity-100'}`}>
+                      <div className="bg-white/5 rounded-xl p-3 border border-white/5 flex justify-between items-center">
+                        <span className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Guvenilir Tahmin</span>
+                        <span className="font-bold text-white text-md">{match.free_prediction}</span>
+                      </div>
 
-                  <div className="relative pt-2">
-                    <div className="flex items-center justify-between mb-3">
-                      <p className="text-cyan-400 font-bold text-xs uppercase tracking-widest flex items-center gap-2">
-                        <span>💎</span> VIP Derin Analiz
-                      </p>
-                    </div>
-                    
-                    <div className={`bg-gradient-to-br from-white/5 to-transparent rounded-2xl p-4 border border-white/5 transition-all duration-700 ease-in-out ${!isUnlocked ? 'blur-md opacity-40 select-none' : 'blur-0 opacity-100'}`}>
-                      <div className="grid grid-cols-3 gap-4 text-center divide-x divide-white/10">
-                        <div className="flex flex-col gap-1">
-                          <span className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">Alt/Ust</span>
-                          <span className="text-green-400 font-bold text-lg">{match.vip_prediction?.alt_ust || '?'}</span>
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <p className="text-cyan-400 font-bold text-xs uppercase tracking-widest flex items-center gap-2">
+                            <span>💎</span> VIP Derin Analiz
+                          </p>
                         </div>
-                        <div className="flex flex-col gap-1">
-                          <span className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">IY/MS</span>
-                          <span className="text-green-400 font-bold text-lg">{match.vip_prediction?.iy_ms || '?'}</span>
-                        </div>
-                        <div className="flex flex-col gap-1">
-                          <span className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">Korner</span>
-                          <span className="text-green-400 font-bold text-lg">{match.vip_prediction?.korner || '?'}</span>
+                        
+                        <div className="bg-gradient-to-br from-white/5 to-transparent rounded-2xl p-4 border border-white/5">
+                          <div className="grid grid-cols-3 gap-4 text-center divide-x divide-white/10">
+                            <div className="flex flex-col gap-1">
+                              <span className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">Alt/Ust</span>
+                              <span className="text-green-400 font-bold text-lg">{match.vip_prediction?.alt_ust || '?'}</span>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              <span className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">IY/MS</span>
+                              <span className="text-green-400 font-bold text-lg">{match.vip_prediction?.iy_ms || '?'}</span>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              <span className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">Korner</span>
+                              <span className="text-green-400 font-bold text-lg">{match.vip_prediction?.korner || '?'}</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -221,7 +223,7 @@ export default function HomeScreen() {
                           <div className="relative bg-[#0f1623] px-6 py-3 rounded-full flex items-center gap-3 transition-colors group-hover:bg-[#0a0f18]">
                             <span className="text-xl">🔓</span>
                             <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-400">
-                              Analizi Ac (Izle)
+                              Reklam Izle - Tahmini Gor
                             </span>
                           </div>
                         </button>

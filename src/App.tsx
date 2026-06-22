@@ -3,6 +3,7 @@ import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition } from '@capacit
 import { useCapacitorAdMob } from './hooks/useCapacitorAdMob';
 import AdSplash from './components/AdSplash';
 import HomeScreen from './screens/HomeScreen';
+import ResultsScreen from './screens/ResultsScreen';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
@@ -83,24 +84,9 @@ export default function App() {
         </div>
       </div>
 
-      <main className="flex-1 overflow-y-auto pb-24">
-        {activeTab === 'home' ? (
-          <HomeScreen />
-        ) : (
-          <div className="flex flex-col items-center justify-center h-64 text-gray-500">
-            <span className="text-4xl mb-2">📊</span>
-            <p className="font-mono tracking-widest">GEÇMİŞ VERİLER YAKINDA</p>
-          </div>
-        )}
+      <main className="flex-1 overflow-y-auto pb-[100px]">
+        {activeTab === 'home' ? <HomeScreen /> : <ResultsScreen />}
       </main>
-
-      <div className="fixed bottom-0 w-full z-50 bg-[#05080c] border-t border-white/10 h-[60px] flex items-center justify-center shadow-[0_-10px_30px_rgba(0,0,0,0.8)]">
-        <div className="flex items-center gap-3 text-gray-600 text-[10px] font-mono tracking-widest animate-pulse">
-          <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-          GLOBAL ADMOB BANNER ALANI
-          <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-        </div>
-      </div>
     </div>
   );
 }
