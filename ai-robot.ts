@@ -5,6 +5,10 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: '.env' });
 
+const currentYear = new Date().getFullYear();
+const currentMonth = new Date().getMonth();
+const SEASON = currentMonth >= 7 ? String(currentYear) : String(currentYear - 1);
+
 const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const openAiKey = process.env.OPENAI_API_KEY;
@@ -23,7 +27,10 @@ const PredictionSchema = z.object({
   vip_prediction: z.object({
     alt_ust: z.string(),
     iy_ms: z.string(),
-    korner: z.string()
+    korner: z.string(),
+    kg_var: z.string(),
+    ciftsans: z.string(),
+    toplam_gol: z.string()
   })
 });
 
@@ -104,7 +111,7 @@ async function syncFixtures() {
       const fixtures = await fetchFromApi('/fixtures', {
         date: today,
         league: String(league.id),
-        season: '2024',
+        season: SEASON,
       });
       apiMaclari.push(...fixtures);
     } catch {
@@ -169,12 +176,15 @@ async function syncFixtures() {
             Sen profesyonel bir futbol analistisin. Su mac icin tahmin uret: ${teams} (${apiMac.league.name})
             Lutfen SADECE asagidaki JSON formatinda, ekstra hicbir yorum olmadan yanit ver:
             {
-              "free_prediction": "Mac Sonucu: 1 (veya 0, 2)",
-              "vip_prediction": {
-                "alt_ust": "2.5 Ust vb.",
-                "iy_ms": "1/1 vb.",
-                "korner": "9.5 Alt vb."
-              }
+            "free_prediction": "Mac Sonucu: 1 (veya 0, 2)",
+            "vip_prediction": {
+              "alt_ust": "2.5 Ust vb.",
+              "iy_ms": "1/1 vb.",
+              "korner": "9.5 Alt vb.",
+              "kg_var": "KG VAR",
+              "ciftsans": "1X",
+              "toplam_gol": "2-3 Gol"
+            }
             }
           `;
           const completion = await openai.chat.completions.create({

@@ -1,6 +1,11 @@
 const API_BASE = 'https://v3.football.api-sports.io';
 const API_KEY = import.meta.env.VITE_API_FOOTBALL_KEY;
 
+function getCurrentSeason(): string {
+  const now = new Date();
+  return now.getMonth() >= 7 ? String(now.getFullYear()) : String(now.getFullYear() - 1);
+}
+
 const POPULAR_LEAGUES = [
   { id: 39, name: 'ENG PL' },
   { id: 140, name: 'SPA LL' },
@@ -63,7 +68,7 @@ export async function getTodaysFixtures(): Promise<ApiFixture[]> {
       const fixtures = await fetchFromApi('/fixtures', {
         date: today,
         league: String(league.id),
-        season: '2024',
+        season: getCurrentSeason(),
       });
       all.push(...fixtures);
     } catch (e) {
@@ -107,7 +112,7 @@ export async function getCompletedFixtures(): Promise<ApiFixture[]> {
       const fixtures = await fetchFromApi('/fixtures', {
         date: today,
         league: String(league.id),
-        season: '2024',
+        season: getCurrentSeason(),
         status: 'FT',
       });
       all.push(...fixtures);

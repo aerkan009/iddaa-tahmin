@@ -195,18 +195,30 @@ export default function HomeScreen() {
                         </div>
                         
                         <div className="bg-gradient-to-br from-white/5 to-transparent rounded-2xl p-4 border border-white/5">
-                          <div className="grid grid-cols-3 gap-4 text-center divide-x divide-white/10">
+                          <div className="grid grid-cols-3 gap-3 text-center">
                             <div className="flex flex-col gap-1">
                               <span className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">Alt/Ust</span>
-                              <span className="text-green-400 font-bold text-lg">{match.vip_prediction?.alt_ust || '?'}</span>
+                              <span className="text-green-400 font-bold text-base">{match.vip_prediction?.alt_ust || '?'}</span>
                             </div>
                             <div className="flex flex-col gap-1">
                               <span className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">IY/MS</span>
-                              <span className="text-green-400 font-bold text-lg">{match.vip_prediction?.iy_ms || '?'}</span>
+                              <span className="text-green-400 font-bold text-base">{match.vip_prediction?.iy_ms || '?'}</span>
                             </div>
                             <div className="flex flex-col gap-1">
                               <span className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">Korner</span>
-                              <span className="text-green-400 font-bold text-lg">{match.vip_prediction?.korner || '?'}</span>
+                              <span className="text-green-400 font-bold text-base">{match.vip_prediction?.korner || '?'}</span>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              <span className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">KG/VAR</span>
+                              <span className="text-cyan-400 font-bold text-base">{match.vip_prediction?.kg_var || '?'}</span>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              <span className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">Cift Sans</span>
+                              <span className="text-cyan-400 font-bold text-base">{match.vip_prediction?.ciftsans || '?'}</span>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              <span className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">Top.Gol</span>
+                              <span className="text-cyan-400 font-bold text-base">{match.vip_prediction?.toplam_gol || '?'}</span>
                             </div>
                           </div>
                         </div>
